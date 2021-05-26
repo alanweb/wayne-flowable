@@ -1,4 +1,4 @@
-package com.wayne;
+package com.wayne.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll()
                 .and()
-                //默认都会产生一个hiden标签 里面有安全相关的验证 防止请求伪造 这边我们暂时不需要 可禁用掉
+                //默认都会产生一个hidden标签 里面有安全相关的验证 防止请求伪造 这边我们暂时不需要 可禁用掉
                 .csrf().disable();
     }
 }

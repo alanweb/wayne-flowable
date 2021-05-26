@@ -1,29 +1,31 @@
 package com.wayne.controller;
 
-import org.flowable.common.engine.impl.identity.Authentication;
-import org.flowable.engine.ProcessEngine;
-import org.flowable.engine.RuntimeService;
-import org.flowable.engine.TaskService;
+import com.wayne.common.api.ApiResult;
+import org.flowable.bpmn.BpmnAutoLayout;
+import org.flowable.bpmn.model.BpmnModel;
+import org.flowable.engine.*;
 import org.flowable.engine.repository.Deployment;
+import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.image.ProcessDiagramGenerator;
 import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * 请假流程
- *
- * @author Foolish
- * @description
- * @date: 2018/9/4 16:03
- */
-
+ * @program: wayne_flowable
+ * @description:
+ * @author: wayne
+ * @create: 2021-04-27 19:55
+ **/
 @RestController
 @RequestMapping(value = "holiday")
 public class HolidayController {
@@ -32,8 +34,11 @@ public class HolidayController {
     @Autowired
     private TaskService taskService;
     @Autowired
+    private RepositoryService repositoryService;
+    @Autowired
     @Qualifier("processEngine")
     private ProcessEngine processEngine;
+
     /**
      * 部署请假流程
      */
@@ -42,94 +47,133 @@ public class HolidayController {
         //部署流程
         Deployment deployment = processEngine.getRepositoryService().createDeployment()
                 .name("请假流程")
-                .addClasspathResource("flowable/Holiday-request.bpmn20.xml")
+                .addClasspathResource("flowable/holiday-request.bpmn20.xml")
                 .deploy();
         return "部署成功.流程Id为：" + deployment.getId();
     }
 
-
     /**
-     * 发起请假流程
-     *
-     * @param employee    用户Id
-     * @param nrOfHolidays     报销金额
-     * @param description 描述
+     * 申请休假
      */
-    @PostMapping(value = "add")
-    public String addHoliday(String employee, Integer nrOfHolidays, String description, String processDefinitionKey) {
+    @PostMapping(value = "/add")
+    public ApiResult<String> add(String employeeId, String managerId, int days, String desc) {
         //启动流程
-        HashMap<String, Object> variables = new HashMap<>();
-        variables.put("employee", employee);
-        variables.put("nrOfHolidays", nrOfHolidays);
-        variables.put("description", description);
-        Authentication.setAuthenticatedUserId("Foolish");
-        ProcessInstance processInstance = runtimeService.startProcessInstanceById(processDefinitionKey, variables);
-        Authentication.setAuthenticatedUserId(null);
-        return "请假审批流程开始.流程Id为：" + processInstance.getId();
-    }
-
-    /**
-     * 获取审批管理列表
-     */
-    @GetMapping(value = "/list")
-    public Object list(String userId) {
-        List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("managers").list();
-        for (Task task : tasks) {
-            System.out.println(task.toString());
-        }
-        return tasks.toArray().toString();
-    }
-
-    /**
-     * 查看任务信息
-     */
-    @GetMapping(value = "show")
-    public Object show(String taskId){
-        Map<String, Object> processVariables = taskService.getVariables(taskId);
-        System.out.println(processVariables);
-        return processVariables;
-    }
-
-    /**
-     * 执行管理员任务
-     */
-    @PostMapping(value = "/approve")
-    public Object approve(boolean approve, String taskId){
-        System.out.println(approve? "批准":"退回");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("approved", approve);
-        taskService.complete(taskId, map);
-        return approve? "批准":"退回";
+        map.put("employeeId", employeeId);
+        map.put("managerId", managerId);
+        map.put("days", days);
+        map.put("desc", desc);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("holidayRequest", map);
+        return ApiResult.success("提交成功.流程Id为：" + processInstance.getId());
     }
 
     /**
-     * 执行管理员任务
+     * 获取task列表
      */
-    @PutMapping(value = "/execute")
-    public Object execute(){
-        TaskService taskService = processEngine.getTaskService();
-        List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("managers").list();
-        System.out.println("You have " + tasks.size() + " tasks:");
-        for (int i=0; i<tasks.size(); i++) {
-            System.out.println((i+1) + ") " + tasks.get(i).getName());
-        }
-        Task task = tasks.get(0);
-        Map<String, Object> processVariables = taskService.getVariables(task.getId());
-        System.out.println(processVariables.get("employee") + " 想请 " +
-                processVariables.get("nrOfHolidays") + " 三天假. 同意？");
+    @GetMapping(value = "/listTask")
+    public ApiResult<String> listTask() {
+        List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("managerId").list();
+        return ApiResult.success(tasks.toString());
+    }
 
-        System.out.println("批准");
+    /**
+     * 获取process列表
+     */
+    @GetMapping(value = "/listProcess")
+    public ApiResult<String> listProcess() {
+        List<ProcessInstance> list = runtimeService.createProcessInstanceQuery().orderByProcessInstanceId().desc().list();
+        return ApiResult.success(list.toString());
+    }
+
+    /**
+     * 批准
+     *
+     * @param taskId 任务ID
+     */
+    @PostMapping(value = "/apply")
+    public ApiResult<String> apply(String taskId) {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        if (task == null) {
+            return ApiResult.failed("流程不存在");
+        }
+        //通过审核
         HashMap<String, Object> map = new HashMap<>();
         map.put("approved", true);
-        taskService.complete(task.getId(), map);
+        taskService.complete(taskId, map);
+        return ApiResult.success("processed ok!");
+    }
 
-        System.out.println("===== jack任务审批 ======");
-        List<Task> tasks2 = taskService.createTaskQuery().taskCandidateOrAssigned("jack").list();
-        System.out.println("jack have " + tasks2.size() + " tasks:");
-        for (int i=0; i<tasks2.size(); i++) {
-            System.out.println((i+1) + ") " + tasks2.get(i).getName());
+    /**
+     * 拒绝
+     *
+     * @param taskId 任务ID
+     */
+    @PostMapping(value = "/reject")
+    public ApiResult<String> reject(String taskId) {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        if (task == null) {
+            return ApiResult.failed("流程不存在");
         }
-        taskService.complete(tasks2.get(0).getId(), map);
-        return "请假审批流程完成";
+        //未通过审核
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("approved", false);
+        taskService.complete(taskId, map);
+        return ApiResult.success("processed failed!");
+    }
+
+    /**
+     * 生成流程图
+     *
+     * @param processId 任务ID
+     */
+    @GetMapping(value = "/processDiagram")
+    public void genProcessDiagram(HttpServletResponse httpServletResponse, String processId) throws Exception {
+        ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(processId).singleResult();
+
+//        流程走完的不显示图
+        if (pi == null) {
+            return;
+        }
+        Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).singleResult();
+        //使用流程实例ID，查询正在执行的执行对象表，返回流程实例对象
+        String InstanceId = task.getProcessInstanceId();
+        List<Execution> executions = runtimeService
+                .createExecutionQuery()
+                .processInstanceId(InstanceId)
+                .list();
+
+        //得到正在执行的Activity的Id
+        List<String> activityIds = new ArrayList<>();
+        List<String> flows = new ArrayList<>();
+        for (Execution exe : executions) {
+            List<String> ids = runtimeService.getActiveActivityIds(exe.getId());
+            activityIds.addAll(ids);
+        }
+
+        //获取流程图
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(pi.getProcessDefinitionId());
+        ProcessEngineConfiguration engconf = processEngine.getProcessEngineConfiguration();
+        ProcessDiagramGenerator diagramGenerator = engconf.getProcessDiagramGenerator();
+        BpmnAutoLayout bpmnAutoLayout = new BpmnAutoLayout(bpmnModel);
+        bpmnAutoLayout.setTaskHeight(120);
+        bpmnAutoLayout.setTaskWidth(120);
+        bpmnAutoLayout.execute();
+        InputStream in = diagramGenerator.generateDiagram(bpmnModel, "png", activityIds, flows, engconf.getActivityFontName(), engconf.getLabelFontName(), engconf.getAnnotationFontName(), engconf.getClassLoader(), 1.0, true);
+        OutputStream out = null;
+        byte[] buf = new byte[1024];
+        int length = 0;
+        try {
+            out = httpServletResponse.getOutputStream();
+            while ((length = in.read(buf)) != -1) {
+                out.write(buf, 0, length);
+            }
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+            if (out != null) {
+                out.close();
+            }
+        }
     }
 }
