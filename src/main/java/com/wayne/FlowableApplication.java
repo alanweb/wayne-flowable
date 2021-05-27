@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 
 @EnableSwaggerBootstrapUI
 @SpringBootApplication(exclude = {FlowableUiSecurityAutoConfiguration.class})
-@MapperScan("com.wayne.mapper")
 public class FlowableApplication {
 
     public static void main(String[] args) {

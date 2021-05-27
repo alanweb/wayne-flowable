@@ -22,7 +22,7 @@ import org.springframework.web.servlet.DispatcherServlet;
         "org.flowable.ui.common.tenant" })
 public class ApplicationConfiguration {
 
-    @Bean
+    //@Bean
     public ServletRegistrationBean modelerApiServlet(ApplicationContext applicationContext) {
         AnnotationConfigWebApplicationContext dispatcherServletConfiguration = new AnnotationConfigWebApplicationContext();
         dispatcherServletConfiguration.setParent(applicationContext);

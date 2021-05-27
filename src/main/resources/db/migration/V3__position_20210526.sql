@@ -4,7 +4,8 @@ create table sys_position(
     employee_id bigint(20) not null ,
     salary float ,
     rank integer ,
-    leader_id bigint not null
+    leader_id bigint not null,
+    deleted int default 0
 )engine = innodb ;
 
 insert into sys_position(employee_id,salary,`rank`,leader_id) values (1,15000,16,1);
