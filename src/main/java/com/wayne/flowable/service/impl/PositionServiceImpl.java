@@ -1,9 +1,9 @@
-package com.wayne.service.impl;
+package com.wayne.flowable.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.wayne.entity.Position;
-import com.wayne.mapper.PositionMapper;
-import com.wayne.service.PositionService;
+import com.wayne.flowable.entity.Position;
+import com.wayne.flowable.mapper.PositionMapper;
+import com.wayne.flowable.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

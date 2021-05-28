@@ -1,4 +1,4 @@
-package com.wayne.config;
+package com.wayne.common.config;
 
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
 import com.baomidou.mybatisplus.autoconfigure.SpringBootVFS;
@@ -19,7 +19,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.util.Arrays;
 
 /**
  * @ClassName: AbstractMybatisPlusConfiguration

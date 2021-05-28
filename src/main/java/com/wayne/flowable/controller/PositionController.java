@@ -1,8 +1,8 @@
-package com.wayne.controller;
+package com.wayne.flowable.controller;
 
 import com.wayne.common.api.ApiResult;
-import com.wayne.entity.Position;
-import com.wayne.service.PositionService;
+import com.wayne.flowable.entity.Position;
+import com.wayne.flowable.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,10 +1,9 @@
-package com.wayne.controller;
+package com.wayne.flowable.controller;
 
 import com.wayne.common.api.ApiResult;
-import com.wayne.entity.Employee;
-import com.wayne.service.EmployeeService;
+import com.wayne.flowable.entity.Employee;
+import com.wayne.flowable.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

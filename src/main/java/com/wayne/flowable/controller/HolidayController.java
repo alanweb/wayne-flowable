@@ -1,4 +1,4 @@
-package com.wayne.controller;
+package com.wayne.flowable.controller;
 
 import com.wayne.common.api.ApiResult;
 import org.flowable.bpmn.BpmnAutoLayout;

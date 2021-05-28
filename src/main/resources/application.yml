@@ -1,33 +1,28 @@
 server:
-  port: 8089
+  port: 8080
 spring:
   datasource:
+    driver-class-name : com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/flowable?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC&nullCatalogMeansCurrent=true
     username: root
     password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
-    serialization:
-      write-dates-as-timestamps: false
   flyway:
     enabled: true
     baseline-on-migrate: true
 logging:
   level:
     ROOT: info
-flowable:
-  #关闭定时任务JOB
-  async-executor-activate: false
-  #将databaseSchemaUpdate设置为true。当Flowable发现库与数据库表结构不一致时，会自动将数据库表结构升级至新版本。
-  database-schema-update: true
 pagehelper:
   dialect: com.github.pagehelper.dialect.helper.MySqlDialect
   reasonable: true
   support-methods-arguments: true
   params: countSql
 
+flowable:
+  #关闭定时任务JOB
+  async-executor-activate: false
+  #将databaseSchemaUpdate设置为true。当Flowable发现库与数据库表结构不一致时，会自动将数据库表结构升级至新版本。
+  database-schema-update: true
 mybatis-plus:
   global-config:
     db-config:
@@ -36,4 +31,3 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-

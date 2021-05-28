@@ -1,10 +1,9 @@
-package com.wayne.service.impl;
+package com.wayne.flowable.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-
-import com.wayne.entity.Employee;
-import com.wayne.mapper.EmployeeMapper;
-import com.wayne.service.EmployeeService;
+import com.wayne.flowable.entity.Employee;
+import com.wayne.flowable.mapper.EmployeeMapper;
+import com.wayne.flowable.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

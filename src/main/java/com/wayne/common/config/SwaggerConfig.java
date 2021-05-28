@@ -1,4 +1,4 @@
-package com.wayne.config;
+package com.wayne.common.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +29,7 @@ public class SwaggerConfig {
                 .enable(true)
                 .select()
                 //接口的包名
-                .apis(RequestHandlerSelectors.basePackage("com.wayne.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.wayne.flowable.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .pathProvider(new RelativePathProvider(servletContext) {

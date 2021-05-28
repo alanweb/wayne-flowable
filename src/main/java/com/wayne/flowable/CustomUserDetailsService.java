@@ -1,4 +1,4 @@
-package com.wayne;
+package com.wayne.flowable;
 
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;

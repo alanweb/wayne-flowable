@@ -1,4 +1,4 @@
-package com.wayne.config;
+package com.wayne.common.config;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
@@ -37,6 +36,7 @@ public class ModelerDatabaseConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelerDatabaseConfiguration.class);
 
     protected static final String LIQUIBASE_CHANGELOG_PREFIX = "ACT_DE_";
+
     @Autowired
     protected FlowableModelerAppProperties modelerAppProperties;
 
@@ -86,7 +86,7 @@ public class ModelerDatabaseConfiguration {
         return databaseTypeMappings;
     }
 
-    @Bean("flowableSqlSessionFactory")
+    @Bean
     @Qualifier("flowableModeler")
     public SqlSessionFactory modelerSqlSessionFactory(DataSource dataSource) {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
@@ -117,7 +117,7 @@ public class ModelerDatabaseConfiguration {
 
     @Bean(destroyMethod = "clearCache") // destroyMethod: see https://github.com/mybatis/old-google-code-issues/issues/778
     @Qualifier("flowableModeler")
-    public SqlSessionTemplate modelerSqlSessionTemplate(@Qualifier("flowableSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+    public SqlSessionTemplate modelerSqlSessionTemplate(@Qualifier("flowableModeler") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 

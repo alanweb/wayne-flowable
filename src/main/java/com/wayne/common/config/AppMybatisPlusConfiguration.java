@@ -1,4 +1,4 @@
-package com.wayne.config;
+package com.wayne.common.config;
 
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -20,7 +20,7 @@ import javax.sql.DataSource;
  * @CreateTIme: 2019/7/17 0017 下午 1:55
  **/
 @MapperScan(basePackages = {
-        "com.wayne.mapper"
+        "com.wayne.flowable.mapper"
 },
         sqlSessionTemplateRef = "appSqlSessionTemplate",
         sqlSessionFactoryRef = "appSqlSessionFactory"

@@ -1,7 +1,7 @@
-package com.wayne.mapper;
+package com.wayne.flowable.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wayne.entity.Position;
+import com.wayne.flowable.entity.Position;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

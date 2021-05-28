@@ -1,4 +1,4 @@
-package com.wayne.entity;
+package com.wayne.flowable.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;

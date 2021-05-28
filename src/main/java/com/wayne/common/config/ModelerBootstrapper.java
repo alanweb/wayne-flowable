@@ -1,4 +1,4 @@
-package com.wayne.config;
+package com.wayne.common.config;
 
 import java.util.List;
 
