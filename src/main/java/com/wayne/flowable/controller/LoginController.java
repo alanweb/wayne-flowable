@@ -1,4 +1,4 @@
-package com.wayne.controller;
+package com.wayne.flowable.controller;
 
 import org.flowable.ui.common.model.UserRepresentation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,7 @@ public class LoginController {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.setEmail("admin@qq.com");
         userRepresentation.setFirstName("admin");
-        userRepresentation.setLastName("在");
+        userRepresentation.setLastName("test");
         userRepresentation.setId("admin");
         return userRepresentation;
     }

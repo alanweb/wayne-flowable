@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    com.wayne.config.ApplicationConfiguration
+    com.wayne.common.config.ApplicationConfiguration

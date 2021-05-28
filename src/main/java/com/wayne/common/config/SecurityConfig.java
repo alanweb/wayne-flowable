@@ -1,24 +1,20 @@
-package com.wayne;
+package com.wayne.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/modeler/**")
-                .authenticated()   //都需要身份认证
-                .anyRequest()
-                .permitAll()  //都可以访问
+        http.authorizeRequests().antMatchers("/modeler/**").authenticated()    //都需要身份认证
                 .and().
                 formLogin()     // 或者httpBasic()
-                 // 指定自定义form表单请求的路径
+                // 指定自定义form表单请求的路径
                 // 必须允许所有用户访问我们的登录页（例如未验证的用户，否则验证流程就会进入死循环）
                 // 这个formLogin().permitAll()方法允许所有用户基于表单登录访问/login这个page。
                 .permitAll()
