@@ -20,7 +20,8 @@ import javax.sql.DataSource;
  * @CreateTIme: 2019/7/17 0017 下午 1:55
  **/
 @MapperScan(basePackages = {
-        "com.wayne.flowable.mapper"
+        "com.wayne.flowable.mapper",
+        "com.wayne.system.mapper"
 },
         sqlSessionTemplateRef = "appSqlSessionTemplate",
         sqlSessionFactoryRef = "appSqlSessionFactory"

@@ -9,14 +9,17 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+  thymeleaf:
+    cache: false
 logging:
   level:
     ROOT: info
+#pagehelper
 pagehelper:
-  dialect: com.github.pagehelper.dialect.helper.MySqlDialect
+  helperDialect: mysql
   reasonable: true
-  support-methods-arguments: true
-  params: countSql
+  supportMethodsArguments: true
+  params: count=countSql
 
 flowable:
   #关闭定时任务JOB
@@ -31,3 +34,4 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.wayne.system.entity
