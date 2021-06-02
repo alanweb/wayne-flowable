@@ -26,17 +26,6 @@ public class LoginController  {
 	public String login() {
 		return "login";
 	}
-
-	@PostMapping("/login")
-	@ResponseBody
-	public ResponseBo login(String username, String password, String code, Boolean rememberMe) {
-		if (!StringUtils.isNotBlank(code)) {
-			return ResponseBo.warn("验证码不能为空！");
-		}
-		this.userService.updateLoginTime(username);
-		return ResponseBo.ok();
-	}
-
 	@GetMapping(value = "gifCode")
 	public void getGifCode(HttpServletResponse response) {
 		try {
